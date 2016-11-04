@@ -52,7 +52,7 @@ public class SensorService extends Service implements SensorEventListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-
+        exportData();
         stopMeasurement();
     }
 
@@ -116,8 +116,8 @@ public class SensorService extends Service implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         Date now = new Date();
-        String sensorType = event.sensor.getStringType();
         String date = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.getDefault()).format(now);
+        String sensorType = event.sensor.getStringType();
         if (lastExportDate == null) {
             lastExportDate = now;
         }
@@ -135,18 +135,24 @@ public class SensorService extends Service implements SensorEventListener {
             heart_rate_buf.append(event.values[0]);
             heart_rate_buf.append(System.getProperty("line.separator"));
         }
+
         // エキスポート
         if (passed(lastExportDate)) {
-            String filename = String.format("%s_%s.csv", "accelerometer", date);
-            exportFile(filename, accelerometer_buf.toString());
-            accelerometer_buf = new StringBuilder();
-
-            filename = String.format("%s_%s.csv", "heart_rate", date);
-            exportFile(filename, heart_rate_buf.toString());
-            heart_rate_buf = new StringBuilder();
-            lastExportDate = now;
-            Log.d("export", "export");
+            exportData();
         }
+    }
+
+    private void exportData(){
+        Date now = new Date();
+        String date = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss", Locale.getDefault()).format(now);
+        String filename = String.format("%s_%s.csv", "accelerometer", date);
+        exportFile(filename, accelerometer_buf.toString());
+        accelerometer_buf = new StringBuilder();
+
+        filename = String.format("%s_%s.csv", "heart_rate", date);
+        exportFile(filename, heart_rate_buf.toString());
+        heart_rate_buf = new StringBuilder();
+        lastExportDate = now;
     }
 
     @Override

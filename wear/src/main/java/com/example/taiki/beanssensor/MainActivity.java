@@ -5,19 +5,21 @@ import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends WearableActivity {
+public class MainActivity extends WearableActivity implements View.OnClickListener {
 
     private static final SimpleDateFormat AMBIENT_DATE_FORMAT = new SimpleDateFormat("HH:mm", Locale.US);
 
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
     private TextView mClockView;
+    private Button mFinishButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class MainActivity extends WearableActivity {
         mContainerView = (BoxInsetLayout) findViewById(R.id.container);
         mTextView = (TextView) findViewById(R.id.text);
         mClockView = (TextView) findViewById(R.id.clock);
+        mFinishButton = (Button) findViewById(R.id.finish);
+        mFinishButton.setOnClickListener(this);
     }
 
     @Override
@@ -67,5 +71,13 @@ public class MainActivity extends WearableActivity {
 
     public void ChangeMessage(String text) {
         mTextView.setText(text);
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.finish) {
+            stopService(new Intent(MainActivity.this, SensorService.class));
+            finishAndRemoveTask();
+        }
     }
 }
