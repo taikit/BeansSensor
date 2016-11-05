@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SensorService extends Service implements SensorEventListener {
 
-    private final static int FILE_EXPORT_TIME = 1000 * 60 * 60 * 60;
+    private final static int FILE_EXPORT_TIME = 1000 * 60 * 60;
     private final static int SENS_ACCELEROMETER = Sensor.TYPE_ACCELEROMETER;
     private final static int SENS_HEARTRATE = Sensor.TYPE_HEART_RATE;
 
